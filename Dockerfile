@@ -12,6 +12,6 @@ ADD pom.xml /code/pom.xml
 RUN ["mvn", "dependency:resolve"]
 RUN ["mvn", "verify"]
 # Adding source, compile and package into a fat jar
-RUN ["mvn", "clean dependency:copy-dependencies -DoutputDirectory=target/classes/lib package -X"]
+RUN ["mvn", "dependency:copy-dependencies -DoutputDirectory=target/classes/lib package -X"]
 
 CMD ["java", "-jar", "target/docker_test-0.0.1-SNAPSHOT.jar"]
