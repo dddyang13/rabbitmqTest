@@ -69,14 +69,30 @@ public class RabbitMQMessageSender implements MessageSender {
 
 	public static void main(String[] args) throws Exception {
 		String ip=InetAddress.getByName(Config.getProperty("host")).getHostAddress();
-		System.out.println("通过DNS："+Config.getProperty("host")+"获取IP为："+ip);
-		String brokers =ip +":"+Config.getIntProperty("port");
+		Integer port=Config.getIntProperty("port");
+		String user="guest";
+		String password="guest";
+		String message = "http://item.jd.com/12345678.html";
+		for (int i = 0; i < args.length; i++) {
+			if (args[i].equals("-ip")) {
+				ip = args[++i];
+		    }else if (args[i].equals("-port")) {
+		        port = Integer.parseInt(args[++i]);
+		    }else if (args[i].equals("-user")) {
+		    	user = args[++i];
+		    }else if (args[i].equals("-password")) {
+		    	password = args[++i];
+		    }else if (args[i].equals("-message")) {
+		    	message = args[++i];
+		    }
+		}
+		System.out.println("获取IP为："+ip);
+		String brokers =ip +":"+port;
+		
+//		String brokers="10.1.235.30:10001";
 		String queue = "LocalCrawlTaskQueue";
 
-		String message = "http://item.jd.com/12345678.html";
-		if(args.length>0)message=args[0];
-
-		MessageSender messageSender = new RabbitMQMessageSender(brokers, queue);
+		MessageSender messageSender = new RabbitMQMessageSender(brokers, queue,user,password);
 		
 		messageSender.sendMessage(message.getBytes());
 		
