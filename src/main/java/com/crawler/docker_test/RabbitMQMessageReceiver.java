@@ -112,11 +112,28 @@ public class RabbitMQMessageReceiver implements MessageReceiver{
 	}
 	
 	public static void main(String[] args) throws Exception {
-		String brokers = Config.getProperty("host")+":"+Config.getIntProperty("port");
+		String ip=InetAddress.getByName(Config.getProperty("host")).getHostAddress();
+		Integer port=Config.getIntProperty("port");
+		String user="guest";
+		String password="guest";
+		for (int i = 0; i < args.length; i++) {
+			if (args[i].equals("-ip")) {
+				ip = args[++i];
+		    }else if (args[i].equals("-port")) {
+		        port = Integer.parseInt(args[++i]);
+		    }else if (args[i].equals("-user")) {
+		    	user = args[++i];
+		    }else if (args[i].equals("-password")) {
+		    	password = args[++i];
+		    }
+		}
+		System.out.println("获取IP为："+ip);
+		String brokers = ip +":"+port;
+		
 		String queue = "LocalCrawlTaskQueue";
 		try {
 			RabbitMQMessageReceiver messageSender = new RabbitMQMessageReceiver(
-					brokers, queue, "guest", "guest");
+					brokers, queue, user,password);
 			messageSender.handleMessage(new MessageHandler() {
 
 				public void onMessage(byte[] message, String routingKey) {
