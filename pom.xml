@@ -89,7 +89,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>  <!-- 在jar包中增加依赖jar路径说明 -->
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.crawler.docker_test.RabbitMQMessageSender</mainClass>
+                            <mainClass>com.crawler.docker_test.RabbitMQMessageReceiver</mainClass>
                         </manifest>
                         
                         <!-- 用maven在MANIFEST.MF资料中的Class-Path中增加当前目录(.)  -->
