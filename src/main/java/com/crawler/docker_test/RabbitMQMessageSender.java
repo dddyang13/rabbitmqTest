@@ -93,10 +93,19 @@ public class RabbitMQMessageSender implements MessageSender {
 		String queue = "LocalCrawlTaskQueue";
 
 		MessageSender messageSender = new RabbitMQMessageSender(brokers, queue,user,password);
-		
-		messageSender.sendMessage(message.getBytes());
-		
-		messageSender.shutdown();
+		int num=0;
+		try{
+			while(true){
+				messageSender.sendMessage((message+num).getBytes());
+				System.out.println("发送消息为:"+message+num);
+				num++;
+				new Thread().sleep(60000);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}finally{
+			messageSender.shutdown();
+		}
 	}
 
 }
