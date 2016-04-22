@@ -113,13 +113,10 @@ public class RabbitMQMessageReceiver implements MessageReceiver{
 	}
 	
 	public static void main(String[] args) throws Exception {
-		//通过配置文件获取配置项
 		String ip=InetAddress.getByName(Config.getProperty("host")).getHostAddress();
 		Integer port=Config.getIntProperty("port");
 		String user="guest";
 		String password="guest";
-		String message = "http://item.jd.com/12345678.html";
-		//通过参数获取获取配置项
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equals("-ip")) {
 				ip = InetAddress.getByName(args[++i]).getHostAddress();
@@ -129,11 +126,8 @@ public class RabbitMQMessageReceiver implements MessageReceiver{
 		    	user = args[++i];
 		    }else if (args[i].equals("-password")) {
 		    	password = args[++i];
-		    }else if (args[i].equals("-message")) {
-		    	message = args[++i];
 		    }
 		}
-		//通过系统环境变量获取配置项
 		if(System.getenv("rabbitmq_ip")!=null)
 			ip=InetAddress.getByName(System.getenv("rabbitmq_ip")).getHostAddress();
 		if(System.getenv("rabbitmq_port")!=null)
@@ -143,24 +137,23 @@ public class RabbitMQMessageReceiver implements MessageReceiver{
 		if(System.getenv("rabbitmq_password")!=null)
 			password=System.getenv("rabbitmq_password");
 		System.out.println("获取IP为："+ip);
-		String brokers =ip +":"+port;
+		String brokers = ip +":"+port;
 		
-		brokers="10.1.235.30:10001";
 		String queue = "LocalCrawlTaskQueue";
+		try {
+			RabbitMQMessageReceiver messageReceiver = new RabbitMQMessageReceiver(
+					brokers, queue, user,password);
+			messageReceiver.handleMessage(new MessageHandler() {
 
-		MessageSender messageSender = new RabbitMQMessageSender(brokers, queue,user,password);
-		int num=0;
-		try{
-			while(true){
-				messageSender.sendMessage((message+num).getBytes());
-				System.out.println("发送消息为:"+message+num);
-				num++;
-				new Thread().sleep(10000);
-			}
-		}catch(Exception e){
+				public void onMessage(byte[] message, String routingKey) {
+					byte b[] = message;
+					System.out.println(new String(b));
+					b = null;
+
+				}
+			});
+		} catch (IOException e) {
 			e.printStackTrace();
-		}finally{
-			messageSender.shutdown();
 		}
 	}
 	
