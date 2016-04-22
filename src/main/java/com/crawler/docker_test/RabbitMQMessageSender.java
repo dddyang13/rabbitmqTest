@@ -76,8 +76,8 @@ public class RabbitMQMessageSender implements MessageSender {
 		String message = "http://item.jd.com/12345678.html";
 		//通过参数获取获取配置项
 		for (int i = 0; i < args.length; i++) {
-			if (args[i].equals("-ip")) {
-				ip = InetAddress.getByName(args[++i]).getHostAddress();
+		    if (args[i].equals("-ip")) {
+			ip = args[++i];
 		    }else if (args[i].equals("-port")) {
 		        port = Integer.parseInt(args[++i]);
 		    }else if (args[i].equals("-user")) {
