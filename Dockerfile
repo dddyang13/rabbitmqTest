@@ -15,7 +15,7 @@ RUN ["mvn", "verify"]
 ADD src /code/src
 RUN ["mvn", "package"]
 
-COPY sendMessage.sh /code/start.sh
+COPY start.sh /code/start.sh
 RUN ["chmod","+x","/code/start.sh"]
 
 CMD ["/code/start.sh"]
