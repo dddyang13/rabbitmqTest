@@ -68,14 +68,16 @@ public class RabbitMQMessageSender implements MessageSender {
 	}
 
 	public static void main(String[] args) throws Exception {
+		//通过配置文件获取配置项
 		String ip=InetAddress.getByName(Config.getProperty("host")).getHostAddress();
 		Integer port=Config.getIntProperty("port");
 		String user="guest";
 		String password="guest";
 		String message = "http://item.jd.com/12345678.html";
+		//通过参数获取获取配置项
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equals("-ip")) {
-				ip = args[++i];
+				ip = InetAddress.getByName(args[++i]).getHostAddress();
 		    }else if (args[i].equals("-port")) {
 		        port = Integer.parseInt(args[++i]);
 		    }else if (args[i].equals("-user")) {
@@ -86,6 +88,15 @@ public class RabbitMQMessageSender implements MessageSender {
 		    	message = args[++i];
 		    }
 		}
+		//通过系统环境变量获取配置项
+		if(System.getenv("rabbitmq_ip")!=null)
+			ip=InetAddress.getByName(System.getenv("rabbitmq_ip")).getHostAddress();
+		if(System.getenv("rabbitmq_port")!=null)
+			port=Integer.parseInt(System.getenv("rabbitmq_port"));
+		if(System.getenv("rabbitmq_user")!=null)
+			user=System.getenv("rabbitmq_user");
+		if(System.getenv("rabbitmq_password")!=null)
+			password=System.getenv("rabbitmq_password");
 		System.out.println("获取IP为："+ip);
 		String brokers =ip +":"+port;
 		
@@ -107,5 +118,4 @@ public class RabbitMQMessageSender implements MessageSender {
 			messageSender.shutdown();
 		}
 	}
-
 }
