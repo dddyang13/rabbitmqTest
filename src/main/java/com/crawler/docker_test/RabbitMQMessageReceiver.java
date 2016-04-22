@@ -113,7 +113,7 @@ public class RabbitMQMessageReceiver implements MessageReceiver{
 	}
 	
 	public static void main(String[] args) throws Exception {
-		String ip=InetAddress.getByName(Config.getProperty("host")).getHostAddress();
+		String ip=Config.getProperty("host");
 		Integer port=Config.getIntProperty("port");
 		String user="guest";
 		String password="guest";
@@ -129,7 +129,7 @@ public class RabbitMQMessageReceiver implements MessageReceiver{
 		    }
 		}
 		if(System.getenv("rabbitmq_ip")!=null)
-			ip=InetAddress.getByName(System.getenv("rabbitmq_ip")).getHostAddress();
+			ip=System.getenv("rabbitmq_ip");
 		if(System.getenv("rabbitmq_port")!=null)
 			port=Integer.parseInt(System.getenv("rabbitmq_port"));
 		if(System.getenv("rabbitmq_user")!=null)
@@ -137,7 +137,8 @@ public class RabbitMQMessageReceiver implements MessageReceiver{
 		if(System.getenv("rabbitmq_password")!=null)
 			password=System.getenv("rabbitmq_password");
 		System.out.println("获取IP为："+ip);
-		String brokers = ip +":"+port;
+		String brokers = InetAddress.getByName(ip).getHostAddress() +":"+port;
+		System.out.println("获取brokers为："+brokers);
 		
 		String queue = "LocalCrawlTaskQueue";
 		try {
