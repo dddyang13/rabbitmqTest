@@ -110,7 +110,7 @@ public class RabbitMQMessageSender implements MessageSender {
 				messageSender.sendMessage((message+num).getBytes());
 				System.out.println("发送消息为:"+message+num);
 				num++;
-				new Thread().sleep(60000);
+				new Thread().sleep(10000);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
