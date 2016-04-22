@@ -16,4 +16,4 @@ ADD src /code/src
 RUN ["mvn", "package"]
 
 CMD ["java", "-jar", "target/docker_test-0.0.1-SNAPSHOT.jar"]
-ENTRYPOINT [sh -c]
+ENTRYPOINT ["/bin/sh -c"]
