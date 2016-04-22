@@ -17,4 +17,4 @@ RUN ["mvn", "package"]
 
 COPY sendMessage.sh /code/sendMessage.sh
 
-ENTRYPOINT ["/code/sendMessage.sh"]
+CMD ["/code/sendMessage.sh"]
