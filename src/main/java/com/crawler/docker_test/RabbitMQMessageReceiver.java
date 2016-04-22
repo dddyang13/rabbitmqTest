@@ -119,7 +119,7 @@ public class RabbitMQMessageReceiver implements MessageReceiver{
 		String password="guest";
 		for (int i = 0; i < args.length; i++) {
 			if (args[i].equals("-ip")) {
-				ip = args[++i];
+				ip = InetAddress.getByName(args[++i]).getHostAddress();
 		    }else if (args[i].equals("-port")) {
 		        port = Integer.parseInt(args[++i]);
 		    }else if (args[i].equals("-user")) {
@@ -128,14 +128,22 @@ public class RabbitMQMessageReceiver implements MessageReceiver{
 		    	password = args[++i];
 		    }
 		}
+		if(System.getenv("rabbitmq_ip")!=null)
+			ip=InetAddress.getByName(System.getenv("rabbitmq_ip")).getHostAddress();
+		if(System.getenv("rabbitmq_port")!=null)
+			port=Integer.parseInt(System.getenv("rabbitmq_port"));
+		if(System.getenv("rabbitmq_user")!=null)
+			user=System.getenv("rabbitmq_user");
+		if(System.getenv("rabbitmq_password")!=null)
+			password=System.getenv("rabbitmq_password");
 		System.out.println("获取IP为："+ip);
 		String brokers = ip +":"+port;
 		
 		String queue = "LocalCrawlTaskQueue";
 		try {
-			RabbitMQMessageReceiver messageSender = new RabbitMQMessageReceiver(
+			RabbitMQMessageReceiver messageReceiver = new RabbitMQMessageReceiver(
 					brokers, queue, user,password);
-			messageSender.handleMessage(new MessageHandler() {
+			messageReceiver.handleMessage(new MessageHandler() {
 
 				public void onMessage(byte[] message, String routingKey) {
 					byte b[] = message;
