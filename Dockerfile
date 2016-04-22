@@ -15,5 +15,6 @@ RUN ["mvn", "verify"]
 ADD src /code/src
 RUN ["mvn", "package"]
 
-CMD ["java", "-jar", "target/docker_test-0.0.1-SNAPSHOT.jar"]
-ENTRYPOINT ["/bin/sh -c"]
+COPY sendMessage.sh /code/sendMessage.sh
+
+ENTRYPOINT ["/code/sendMessage.sh"]
